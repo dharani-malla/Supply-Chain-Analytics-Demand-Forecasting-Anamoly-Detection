@@ -68,6 +68,42 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
+# Page configuration
+st.set_page_config(
+    page_title="Supply Chain Demand Dashboard",
+    page_icon="📊",
+    layout="wide"
+)
+
+# Load historical and anomaly dataset
+historical_df = pd.read_excel(
+    "data/final_anomaly_dataset (1).xlsx"
+)
+
+# Convert Date column to datetime
+historical_df["Date"] = pd.to_datetime(
+    historical_df["Date"]
+)
+
+# Load anomaly detection dataset
+anomaly_df = pd.read_excel(
+    "data/final_anomaly_dataset (1).xlsx"
+)
+
+# Convert Date column to datetime
+anomaly_df["Date"] = pd.to_datetime(anomaly_df["Date"])
+
+# Sort by Date
+anomaly_df = anomaly_df.sort_values("Date")
+
+# Load forecast dataset
+forecast_df = pd.read_excel("data/future_forecast.xlsx")
+forecast_df["Date"] = pd.to_datetime(forecast_df["Date"])
+
+forecast_df["Forecast"] = forecast_df["Forecast"].round(2)
+# Main dataframe
+df = historical_df.copy()
+
 # Sidebar
 st.sidebar.markdown("---")
 st.sidebar.title(" Navigation")
@@ -76,13 +112,6 @@ st.sidebar.caption("Supply Chain Analytics")
 st.sidebar.markdown("---")
 st.sidebar.subheader(" Filters")
 
-
-# Page configuration
-st.set_page_config(
-    page_title="Supply Chain Demand Dashboard",
-    page_icon="📊",
-    layout="wide"
-)
 
 # =========================
 # PAGE CONTENT
