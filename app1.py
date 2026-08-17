@@ -188,6 +188,37 @@ page = st.sidebar.radio(
     ]
 )
 
+# =========================
+# TOP KPI CARDS
+# =========================
+
+col1, col2, col3 = st.columns(3, gap="medium")
+
+# Anomaly count based on selected filters
+anomaly_count = (
+    (filtered_anomaly_df["IQR_Anomaly"] == 1) |
+    (filtered_anomaly_df["IsolationForest"] == 1) |
+    (filtered_anomaly_df["ZScore_Anomaly"] == 1)
+).sum()
+
+with col1:
+    st.metric(
+        "Historical Records",
+        f"{len(filtered_df):,}"
+    )
+
+with col2:
+    st.metric(
+        "Anomaly Records",
+        f"{anomaly_count:,}"
+    )
+
+with col3:
+    st.metric(
+        "Forecast Days",
+        f"{len(forecast_df):,}"
+    )
+
 
 # =========================
 # PAGE CONTENT
@@ -220,6 +251,121 @@ if page == "Home":
         Use the navigation panel and filters to explore the available
         supply chain data and analytical results.
         </p>
+    </div>
+    """, unsafe_allow_html=True)
+
+    # Forecast Overview
+    st.subheader("Forecast Overview")
+    
+    col1, col2, col3 = st.columns(3, gap="medium")
+    
+    with col1:
+        st.metric(
+            "Forecast Records",
+            f"{len(forecast_df):,}"
+        )
+    
+    with col2:
+        st.metric(
+            "Average Forecast",
+            f"{forecast_df['Forecast'].mean():,.2f}"
+        )
+    
+    with col3:
+        st.metric(
+            "Maximum Forecast",
+            f"{forecast_df['Forecast'].max():,.2f}"
+        )
+
+    # Dashboard Features
+    st.subheader("Dashboard Features")
+    
+    col1, col2, col3 = st.columns(3, gap="medium")
+    
+    with col1:
+        st.markdown("""
+        <div class="feature-card">
+            <h4>Historical Demand</h4>
+            <p>
+            Explore historical demand records, units sold,
+            summary statistics, and filtered demand data.
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    with col2:
+        st.markdown("""
+        <div class="feature-card">
+            <h4>Anomaly Detection</h4>
+            <p>
+            Review detected anomalies using IQR,
+            Isolation Forest, and Z-Score analysis.
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    with col3:
+        st.markdown("""
+        <div class="feature-card">
+            <h4>Demand Forecast</h4>
+            <p>
+            View the available 90-day demand forecast
+            and forecast summary statistics.
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
+    # =========================
+    # DASHBOARD STATUS
+    # =========================
+    
+    st.subheader("Dashboard Overview")
+    
+    col1, col2, col3 = st.columns(3, gap="medium")
+    with col1:
+        st.markdown("""
+        <div class="feature-card">
+            <h4>Data Integration</h4>
+            <p>
+            Historical demand, anomaly detection, and forecast
+            datasets are integrated into one dashboard.
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    with col2:
+        st.markdown("""
+        <div class="feature-card">
+            <h4>Interactive Filters</h4>
+            <p>
+            Filter the dashboard using Region, Category,
+            and Store to explore specific records.
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    with col3:
+        st.markdown("""
+        <div class="feature-card">
+            <h4>Analytical Summary</h4>
+            <p>
+            View demand statistics, anomaly counts,
+            and forecast summary information.
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
+    
+# How to Use
+    st.subheader("How to Use")
+    
+    st.info(
+        "Select a Region, Category, and Store from the sidebar. "
+        "Then choose Historical Demand, Anomaly Detection, or Forecast "
+        "to explore the corresponding analysis."
+    )
+    
+    st.markdown("""
+    <div class="footer-box">
+        Supply Chain Analytics • Demand Forecasting Dashboard
     </div>
     """, unsafe_allow_html=True)
 
