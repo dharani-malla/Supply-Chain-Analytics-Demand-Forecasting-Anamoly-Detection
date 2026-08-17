@@ -112,6 +112,82 @@ st.sidebar.caption("Supply Chain Analytics")
 st.sidebar.markdown("---")
 st.sidebar.subheader(" Filters")
 
+# Region Filter
+region_options = ["All"] + sorted(df["Region"].dropna().unique().tolist())
+selected_region = st.sidebar.selectbox(
+    "Select Region",
+    region_options
+)
+
+# Category Filter
+category_options = ["All"] + sorted(df["Category"].dropna().unique().tolist())
+selected_category = st.sidebar.selectbox(
+    "Select Category",
+    category_options
+)
+
+# Store Filter
+store_options = ["All"] + sorted(df["Store ID"].dropna().unique().tolist())
+selected_store = st.sidebar.selectbox(
+    "Select Store",
+    store_options
+)
+filtered_df = df.copy()
+
+if selected_region != "All":
+    filtered_df = filtered_df[
+        filtered_df["Region"] == selected_region
+    ]
+
+if selected_category != "All":
+    filtered_df = filtered_df[
+        filtered_df["Category"] == selected_category
+    ]
+
+if selected_store != "All":
+    filtered_df = filtered_df[
+        filtered_df["Store ID"] == selected_store
+    ]
+filtered_anomaly_df = anomaly_df.copy()
+
+if selected_region != "All":
+    filtered_anomaly_df = filtered_anomaly_df[
+        filtered_anomaly_df["Region"] == selected_region
+    ]
+
+if selected_category != "All":
+    filtered_anomaly_df = filtered_anomaly_df[
+        filtered_anomaly_df["Category"] == selected_category
+    ]
+
+if selected_store != "All":
+    filtered_anomaly_df = filtered_anomaly_df[
+        filtered_anomaly_df["Store ID"] == selected_store
+    ]
+# =========================
+# FILTER VALIDATION
+# =========================
+
+if filtered_df.empty:
+    st.warning(
+        "No historical records found for the selected filters."
+    )
+
+if filtered_anomaly_df.empty:
+    st.info(
+        "No anomaly records found for the selected filters."
+    )
+
+page = st.sidebar.radio(
+    "Select Section",
+    [
+        "Home",
+        "Historical Demand",
+        "Anomaly Detection",
+        "Forecast"
+    ]
+)
+
 
 # =========================
 # PAGE CONTENT
