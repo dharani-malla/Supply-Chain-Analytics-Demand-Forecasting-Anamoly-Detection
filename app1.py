@@ -574,3 +574,116 @@ elif page == "Historical Demand":
         fig,
         use_container_width=True
     )
+
+    # =========================
+# ANOMALY DETECTION
+# =========================
+
+elif page == "Anomaly Detection":
+
+    st.header("Anomaly Detection")
+
+    st.markdown("""
+    <div class="home-card">
+
+    <h3>Anomaly Detection Overview</h3>
+
+    <p>
+    Review unusual demand records identified using three anomaly
+    detection techniques: IQR, Isolation Forest, and Z-Score.
+    </p>
+
+    <p>
+    The displayed results are updated according to the selected
+    Region, Category, and Store filters.
+    </p>
+
+    </div>
+    """, unsafe_allow_html=True)
+
+    st.subheader("Anomaly Summary")
+
+    iqr_count = filtered_anomaly_df["IQR_Anomaly"].sum()
+    isolation_count = filtered_anomaly_df["IsolationForest"].sum()
+    zscore_count = filtered_anomaly_df["ZScore_Anomaly"].sum()
+
+    col1, col2, col3 = st.columns(3)
+
+    with col1:
+        st.metric(
+            "IQR Anomalies",
+            f"{int(iqr_count):,}"
+        )
+
+    with col2:
+        st.metric(
+            "Isolation Forest Anomalies",
+            f"{int(isolation_count):,}"
+        )
+
+    with col3:
+        st.metric(
+            "Z-Score Anomalies",
+            f"{int(zscore_count):,}"
+        )
+
+    # =========================
+    # ANOMALY DETECTION CHART
+    # =========================
+
+    st.subheader("Anomaly Detection Overview")
+
+    st.caption(
+        "Comparison of detected anomalies across the three detection techniques."
+    )
+
+    anomaly_chart_df = pd.DataFrame({
+        "Detection Method": [
+            "IQR",
+            "Isolation Forest",
+            "Z-Score"
+        ],
+        "Anomalies": [
+            int(iqr_count),
+            int(isolation_count),
+            int(zscore_count)
+        ]
+    })
+
+    # Interactive anomaly detection comparison chart
+    fig = go.Figure()
+
+    fig.add_trace(
+        go.Bar(
+            x=anomaly_chart_df["Detection Method"],
+            y=anomaly_chart_df["Anomalies"],
+            text=anomaly_chart_df["Anomalies"],
+            textposition="auto",
+            name="Detected Anomalies"
+        )
+    )
+
+    fig.update_layout(
+        height=450,
+        xaxis_title="Detection Method",
+        yaxis_title="Number of Anomalies",
+        hovermode="x",
+        showlegend=False,
+        margin=dict(l=20, r=20, t=30, b=20)
+    )
+
+    st.plotly_chart(
+        fig,
+        use_container_width=True
+    )
+
+    st.subheader("Anomaly Detection Data")
+
+    st.caption(
+        "Showing the first 100 anomaly records based on the currently selected filters."
+    )
+
+    st.dataframe(
+        filtered_anomaly_df.head(100),
+        use_container_width=True
+    )
